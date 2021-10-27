@@ -3,8 +3,8 @@
     <el-image  id="image-viewer" :fit="cover" :src="imgSrc"/>
     <div>
       <el-row id="camera-footer" :gutter="20" align="middle" justify="center" type="flex">
-        <el-col  :span="12"><img id="pic-cancel" class="footer-icon" src="./assets/ic_cancel.png"/></el-col>
-        <el-col  :span="12"><img id="pic-confirm" class="footer-icon" src="./assets/ic_confirm.png"/></el-col>
+        <el-col  :span="12"><img id="pic-cancel" class="footer-icon" :src="require('../assets/ic_cancel.png')"/></el-col>
+        <el-col  :span="12"><img id="pic-confirm" class="footer-icon" :src="require('../assets/ic_confirm.png')"/></el-col>
       </el-row>
     </div>
   </div>

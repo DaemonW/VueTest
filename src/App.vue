@@ -5,12 +5,11 @@
         <video id="videoInput" class="canvas-big"></video>
       </div>
       <canvas v-show="false" id="image-render" height="1920" width="1080"></canvas>
-      <el-image v-show="showImage" id="image-viewer" :fit="cover" :src="imageSrc"/>
       <div>
         <el-row id="camera-footer" :gutter="12" align="middle" justify="center" type="flex">
-          <el-col v-show="showFrame" :span="8"><img id="thumbnail" class="footer-icon" src="./assets/ic_placeholder.png"/></el-col>
-          <el-col v-show="showFrame" :span="8"><img id="shutter" class="footer-icon" src="./assets/ic_shutter.png"/></el-col>
-          <el-col v-show="showFrame" :span="8"><img id="toggle" class="footer-icon" src="./assets/ic_toggle.png"/></el-col>
+          <el-col v-show="showFrame" :span="8"><img id="thumbnail" class="footer-icon" :src="require('./assets/ic_placeholder.png')"/></el-col>
+          <el-col v-show="showFrame" :span="8"><img id="shutter" class="footer-icon" :src="require('./assets/ic_shutter.png')"/></el-col>
+          <el-col v-show="showFrame" :span="8"><img id="toggle" class="footer-icon" :src="require('./assets/ic_toggle.png')"/></el-col>
         </el-row>
       </div>
     </div>
@@ -18,6 +17,8 @@
 </template>
 
 <script>
+
+
 
 let video;
 let canvas;
@@ -50,7 +51,6 @@ export default {
     let vm = this;
     shutter = document.getElementById('shutter');
     shutter.onclick = function () {
-      console.log("capture image");
       vm.capture();
     };
 
@@ -63,33 +63,37 @@ export default {
     toggle.onclick = function () {
 
     };
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !navigator.mediaDevices.enumerateDevices) {
+      alert('该设备不支持媒体设备功能!');
+      return;
+    }
     this.startRecord2();
   },
   methods: {
     async startRecord2() {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert('不支持摄像设备');
-        return;
-      }
       let devices = await navigator.mediaDevices.enumerateDevices();
       devices = devices.filter(d => {
         console.log(`label = ${d.label}, group = ${d.groupId}, id = ${d.deviceId}`);
-        if (d.label === '' || d.label === null) {
+        if (d.deviceId === '' || d.kind !== 'videoinput') {
           return false;
         }
         return true;
       });
+      if(devices===null || devices.length===0){
+        alert('没有可用的摄像设备!');
+        return;
+      }
       devices.forEach(d => {
         this.ids.push(d.deviceId);
       });
       let constrains = {
         audio: false,
         video: {
-          width: {min: 960, ideal: 1920, max: 1920},
-          height: {min: 640, ideal: 1080, max: 1080},
+          width: {min: 1080, ideal: 1920, max: 3840},
+          height: {min: 720, ideal: 1080, max: 2160},
           facingMode: {ideal: "environment"},
           focusMode: "continuous",
-          deviceId: this.ids[2]
+          //deviceId: this.ids[2]
         },
       }
       navigator.mediaDevices.getUserMedia(constrains)
@@ -116,10 +120,10 @@ export default {
       console.log(`canvas width = ${canvas.width}, canvas height=${canvas.height}`);
       canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
       console.log("capture done");
-      let image_data_url = canvas.toDataURL('image/jpeg');
-      this.imageSrc = image_data_url;
+      this.imageSrc = canvas.toDataURL('image/jpeg');
       this.showFrame = false;
       this.showImage = true;
+      this.$router.push('image');
     },
     onHandlePic() {
 
