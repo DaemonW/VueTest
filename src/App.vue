@@ -4,11 +4,13 @@
       <div v-show="showFrame" id="camera-frame">
         <video id="videoInput" class="canvas-big"></video>
       </div>
-      <canvas v-show="showCanvas" id="image-render"></canvas>
+      <canvas v-show="showCanvas" id="image-render" height="1920" width="1080"></canvas>
+      <el-image v-show="showImage" :fit="cover" :src="imageSrc" id="image-viewer"/>
       <div>
         <el-row id="camera-footer" :gutter="12" align="middle" justify="center" type="flex">
-          <el-col :span="12"><img id="thumbnail" src="./assets/ic_placeholder.png"/></el-col>
-          <el-col :span="12"><img id="shutter" src="./assets/ic_shutter.png"/></el-col>
+          <el-col :span="8"><img id="thumbnail" class="footer-icon" src="./assets/ic_placeholder.png"/></el-col>
+          <el-col :span="8"><img id="shutter" class="footer-icon" src="./assets/ic_shutter.png"/></el-col>
+          <el-col :span="8"><img id="toggle" class="footer-icon" src="./assets/ic_toggle.png"/></el-col>
         </el-row>
       </div>
     </div>
@@ -22,14 +24,17 @@ let canvas;
 
 export default {
   name: 'App',
-  components: {
-  },
+  components: {},
   data() {
     return {
       showFrame: true,
       showCanvas: false,
+      showImage: false,
       screenH: 0,
-      screenW: 0
+      screenW: 0,
+      imageSrc:'',
+      ids:[],
+      index:0,
     }
   },
   created() {
@@ -54,21 +59,16 @@ export default {
         return;
       }
       let devices = await navigator.mediaDevices.enumerateDevices();
-      devices.forEach(d => {
+      devices = devices.filter(d => {
         console.log(`label = ${d.label}, group = ${d.groupId}, id = ${d.deviceId}`);
+        if(d.label===''|| d.label===null){
+          return false;
+        }
+        return true;
       });
-      // let preferDevice = devices.find(d => {
-      //   if (d.deviceId === 'default' && d.groupId === 'default') {
-      //     return true;
-      //   }
-      //   return false;
-      // });
-      let ids = [
-        'aedf475a11f87171ddd0baa47fcf8c2a5f8e4e4b81c054fee3de81fb99d75380',
-        '0d131ca223654dd52ce8c996fb6cd030276b1596d1c7b0270603da68972cd351',
-        '066783ec655fb67b7d8107eb86d43e0de32f088302d6b5721b38d4a485bc6a24',
-        'f17bc172a9ddbf4e253e5299f2de0174f2487ce233d14c19660f3cdf216d996d'
-      ]
+      devices.forEach(d=>{
+        this.ids.push(d.deviceId);
+      });
       let constrains = {
         audio: false,
         video: {
@@ -76,7 +76,7 @@ export default {
           height: {min: 640, ideal: 1080, max: 1080},
           facingMode: {ideal: "environment"},
           focusMode: "continuous",
-          deviceId: ids[2]
+          deviceId: this.ids[2]
         },
       }
       navigator.mediaDevices.getUserMedia(constrains)
@@ -101,10 +101,13 @@ export default {
       }
       console.log(`video width = ${video.width}, video height=${video.height}`);
       console.log(`canvas width = ${canvas.width}, canvas height=${canvas.height}`);
-      canvas.getContext('2d').drawImage(video, 0, 0, 500, 300);
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
       console.log("capture done");
+      let image_data_url = canvas.toDataURL('image/jpeg');
+      this.imageSrc = image_data_url;
       this.showFrame = false;
-      this.showCanvas = true;
+      this.showCanvas = false;
+      this.showImage = true;
     },
   }
 }
@@ -135,20 +138,9 @@ html, body {
   width: 100vw;
 }
 
-#shutter {
-  height: 40px;
-  width: 40px;
-}
-
-#thumbnail {
-  height: 40px;
-  width: 40px;
-}
-
-canvas {
-  height: 75vh;
-  width: 100vw;
-  display: block;
+.footer-icon {
+  height: 36px;
+  width: 36px;
 }
 
 #image-viewer {
