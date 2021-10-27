@@ -1,32 +1,40 @@
 <template>
-  <div class="hello">
-    <canvas id="gallery" class="canvas"></canvas>
+  <div id="root">
+    <el-image  id="image-viewer" :fit="cover" :src="imgSrc"/>
+    <div>
+      <el-row id="camera-footer" :gutter="20" align="middle" justify="center" type="flex">
+        <el-col  :span="12"><img id="pic-cancel" class="footer-icon" src="./assets/ic_cancel.png"/></el-col>
+        <el-col  :span="12"><img id="pic-confirm" class="footer-icon" src="./assets/ic_confirm.png"/></el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'ImageViewer',
-  props: {
-    data: []
+  props: [
+    'data'
+  ],
+  data(){
+    return{
+      imgSrc:''
+    }
+  },
+  created() {
+    this.imgSrc = this.data;
+  },
+  mounted() {
+
   }
+
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+#image-viewer {
+  height: 75vh;
+  width: 100vw;
 }
 </style>

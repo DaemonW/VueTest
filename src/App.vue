@@ -4,13 +4,13 @@
       <div v-show="showFrame" id="camera-frame">
         <video id="videoInput" class="canvas-big"></video>
       </div>
-      <canvas v-show="showCanvas" id="image-render" height="1920" width="1080"></canvas>
-      <el-image v-show="showImage" :fit="cover" :src="imageSrc" id="image-viewer"/>
+      <canvas v-show="false" id="image-render" height="1920" width="1080"></canvas>
+      <el-image v-show="showImage" id="image-viewer" :fit="cover" :src="imageSrc"/>
       <div>
         <el-row id="camera-footer" :gutter="12" align="middle" justify="center" type="flex">
-          <el-col :span="8"><img id="thumbnail" class="footer-icon" src="./assets/ic_placeholder.png"/></el-col>
-          <el-col :span="8"><img id="shutter" class="footer-icon" src="./assets/ic_shutter.png"/></el-col>
-          <el-col :span="8"><img id="toggle" class="footer-icon" src="./assets/ic_toggle.png"/></el-col>
+          <el-col v-show="showFrame" :span="8"><img id="thumbnail" class="footer-icon" src="./assets/ic_placeholder.png"/></el-col>
+          <el-col v-show="showFrame" :span="8"><img id="shutter" class="footer-icon" src="./assets/ic_shutter.png"/></el-col>
+          <el-col v-show="showFrame" :span="8"><img id="toggle" class="footer-icon" src="./assets/ic_toggle.png"/></el-col>
         </el-row>
       </div>
     </div>
@@ -21,6 +21,9 @@
 
 let video;
 let canvas;
+let shutter;
+let thumbnail;
+let toggle;
 
 export default {
   name: 'App',
@@ -28,13 +31,12 @@ export default {
   data() {
     return {
       showFrame: true,
-      showCanvas: false,
       showImage: false,
       screenH: 0,
       screenW: 0,
-      imageSrc:'',
-      ids:[],
-      index:0,
+      imageSrc: '',
+      ids: [],
+      index: 0,
     }
   },
   created() {
@@ -46,9 +48,20 @@ export default {
     video = document.getElementById('videoInput');
     canvas = document.getElementById('image-render');
     let vm = this;
-    document.getElementById('shutter').onclick = function () {
+    shutter = document.getElementById('shutter');
+    shutter.onclick = function () {
       console.log("capture image");
       vm.capture();
+    };
+
+    thumbnail = document.getElementById('thumbnail')
+        thumbnail.onclick = function () {
+
+    };
+
+    toggle = document.getElementById('toggle');
+    toggle.onclick = function () {
+
     };
     this.startRecord2();
   },
@@ -61,12 +74,12 @@ export default {
       let devices = await navigator.mediaDevices.enumerateDevices();
       devices = devices.filter(d => {
         console.log(`label = ${d.label}, group = ${d.groupId}, id = ${d.deviceId}`);
-        if(d.label===''|| d.label===null){
+        if (d.label === '' || d.label === null) {
           return false;
         }
         return true;
       });
-      devices.forEach(d=>{
+      devices.forEach(d => {
         this.ids.push(d.deviceId);
       });
       let constrains = {
@@ -106,9 +119,11 @@ export default {
       let image_data_url = canvas.toDataURL('image/jpeg');
       this.imageSrc = image_data_url;
       this.showFrame = false;
-      this.showCanvas = false;
       this.showImage = true;
     },
+    onHandlePic() {
+
+    }
   }
 }
 </script>
