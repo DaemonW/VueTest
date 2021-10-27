@@ -1,32 +1,33 @@
 <template>
   <div id="app">
     <div id="camera-panel">
-      <div id="camera-frame">
+      <div v-show="showFrame" id="camera-frame">
         <video id="videoInput" class="canvas-big"></video>
       </div>
-      <div id="camera-footer">
-        <div class="center">
-          <button id="takePhotoButton" disabled>photo_camera</button>
-        </div>
+      <canvas v-show="showCanvas" id="image-render"></canvas>
+      <div>
+        <el-row id="camera-footer" :gutter="12" align="middle" justify="center" type="flex">
+          <el-col :span="12"><img id="thumbnail" src="./assets/ic_placeholder.png"/></el-col>
+          <el-col :span="12"><img id="shutter" src="./assets/ic_shutter.png"/></el-col>
+        </el-row>
       </div>
     </div>
-    <ImageViewer v-if="showGallery"/>
   </div>
 </template>
 
 <script>
-import ImageViewer from './components/ImageViewer.vue';
 
 let video;
+let canvas;
 
 export default {
   name: 'App',
   components: {
-    ImageViewer
   },
   data() {
     return {
-      showGallery: false,
+      showFrame: true,
+      showCanvas: false,
       screenH: 0,
       screenW: 0
     }
@@ -38,6 +39,12 @@ export default {
   },
   mounted() {
     video = document.getElementById('videoInput');
+    canvas = document.getElementById('image-render');
+    let vm = this;
+    document.getElementById('shutter').onclick = function () {
+      console.log("capture image");
+      vm.capture();
+    };
     this.startRecord2();
   },
   methods: {
@@ -47,7 +54,7 @@ export default {
         return;
       }
       let devices = await navigator.mediaDevices.enumerateDevices();
-      devices.forEach(d=>{
+      devices.forEach(d => {
         console.log(`label = ${d.label}, group = ${d.groupId}, id = ${d.deviceId}`);
       });
       // let preferDevice = devices.find(d => {
@@ -57,10 +64,10 @@ export default {
       //   return false;
       // });
       let ids = [
-          'aedf475a11f87171ddd0baa47fcf8c2a5f8e4e4b81c054fee3de81fb99d75380',
-          '0d131ca223654dd52ce8c996fb6cd030276b1596d1c7b0270603da68972cd351',
-          '066783ec655fb67b7d8107eb86d43e0de32f088302d6b5721b38d4a485bc6a24',
-          'f17bc172a9ddbf4e253e5299f2de0174f2487ce233d14c19660f3cdf216d996d'
+        'aedf475a11f87171ddd0baa47fcf8c2a5f8e4e4b81c054fee3de81fb99d75380',
+        '0d131ca223654dd52ce8c996fb6cd030276b1596d1c7b0270603da68972cd351',
+        '066783ec655fb67b7d8107eb86d43e0de32f088302d6b5721b38d4a485bc6a24',
+        'f17bc172a9ddbf4e253e5299f2de0174f2487ce233d14c19660f3cdf216d996d'
       ]
       let constrains = {
         audio: false,
@@ -69,7 +76,7 @@ export default {
           height: {min: 640, ideal: 1080, max: 1080},
           facingMode: {ideal: "environment"},
           focusMode: "continuous",
-          deviceId:ids[2]
+          deviceId: ids[2]
         },
       }
       navigator.mediaDevices.getUserMedia(constrains)
@@ -85,9 +92,19 @@ export default {
         video.play();
         self.video = video;
         self.stream = stream;
-        //self.onCameraStartedCallback = callback;
-        //video.addEventListener('canplay', onVideoCanPlay, false);
       }
+    },
+    capture() {
+      if (canvas === null || canvas === undefined) {
+        console.log("null object");
+        return;
+      }
+      console.log(`video width = ${video.width}, video height=${video.height}`);
+      console.log(`canvas width = ${canvas.width}, canvas height=${canvas.height}`);
+      canvas.getContext('2d').drawImage(video, 0, 0, 500, 300);
+      console.log("capture done");
+      this.showFrame = false;
+      this.showCanvas = true;
     },
   }
 }
@@ -118,19 +135,30 @@ html, body {
   width: 100vw;
 }
 
-#camera-footer {
+#shutter {
+  height: 40px;
+  width: 40px;
+}
+
+#thumbnail {
+  height: 40px;
+  width: 40px;
+}
+
+canvas {
+  height: 75vh;
+  width: 100vw;
   display: block;
+}
+
+#image-viewer {
+  height: 75vh;
+  width: 100vw;
+}
+
+#camera-footer {
   height: 10vh;
   width: 100vw;
   background: #000000;
-}
-
-.center {
-  margin: 0;
-  position: relative;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
 }
 </style>
