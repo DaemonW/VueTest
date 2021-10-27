@@ -1,6 +1,8 @@
 <template>
   <div id="root">
+    <div>
     <el-image  id="image-viewer" :fit="cover" :src="imgSrc"/>
+    </div>
     <div>
       <el-row id="camera-footer" :gutter="20" align="middle" justify="center" type="flex">
         <el-col  :span="12"><img id="pic-cancel" class="footer-icon" :src="require('../assets/ic_cancel.png')"/></el-col>
@@ -13,19 +15,14 @@
 <script>
 export default {
   name: 'ImageViewer',
-  props: [
-    'data'
-  ],
   data(){
     return{
       imgSrc:''
     }
   },
-  created() {
-    this.imgSrc = this.data;
-  },
   mounted() {
-
+    this.imgSrc = this.$route.params.data;
+    console.log("data = "+this.imgSrc);
   }
 
 }
@@ -36,5 +33,16 @@ export default {
 #image-viewer {
   height: 75vh;
   width: 100vw;
+}
+
+#camera-footer {
+  height: 10vh;
+  width: 100vw;
+  background: #000000;
+}
+
+.footer-icon {
+  height: 36px;
+  width: 36px;
 }
 </style>

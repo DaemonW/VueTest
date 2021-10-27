@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import Camera from "./components/Camera";
 
 Vue.config.productionTip = false
 
@@ -14,9 +15,10 @@ Vue.use(VueRouter);
 const NotFound = { template: '<p>Page not found</p>' };
 
 const routes = [
-  { path: '/', component: App },
-  { path: '/image', component: ImageViewer },
-  { path: '/404.html', component: NotFound },
+  { path: '/',name:'/', component: App },
+  { path: '/camera',name:'camera', component: Camera },
+  { path: '/image',name:'image', component: ImageViewer },
+  { path: '/404.html',name:'404', component: NotFound },
 ]
 
 const router = new VueRouter({
