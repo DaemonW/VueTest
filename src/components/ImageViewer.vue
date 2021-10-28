@@ -1,12 +1,13 @@
 <template>
   <div id="root">
     <div>
-    <img  id="image-viewer" :src="imgSrc"/>
+      <img id="image-viewer" :src="imgSrc"/>
     </div>
     <div>
       <el-row id="camera-footer" :gutter="20" align="middle" justify="center" type="flex">
-        <el-col  :span="12"><img id="pic-cancel" class="footer-icon" :src="require('../assets/ic_cancel.png')"/></el-col>
-        <el-col  :span="12"><img id="pic-confirm" class="footer-icon" :src="require('../assets/ic_confirm.png')"/></el-col>
+        <el-col :span="12"><img id="pic-cancel" class="footer-icon" :src="require('../assets/ic_cancel.png')"/></el-col>
+        <el-col :span="12"><img id="pic-confirm" class="footer-icon" :src="require('../assets/ic_confirm.png')"/>
+        </el-col>
       </el-row>
     </div>
   </div>
@@ -15,17 +16,16 @@
 <script>
 export default {
   name: 'ImageViewer',
-  data(){
-    return{
-      imgSrc:''
+  data() {
+    return {
+      imgSrc: ''
     }
   },
   mounted() {
     let vm = this;
     this.imgSrc = this.$route.params.data;
-    document.getElementById('pic-cancel').onclick=function(){
-          console.log('go back');
-          vm.$router.go(-1);
+    document.getElementById('pic-cancel').onclick = function () {
+      vm.$router.go(-1);
     };
   }
 
