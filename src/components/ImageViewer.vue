@@ -1,7 +1,7 @@
 <template>
   <div id="root">
     <div>
-    <el-image  id="image-viewer" :fit="cover" :src="imgSrc"/>
+    <img  id="image-viewer" :src="imgSrc"/>
     </div>
     <div>
       <el-row id="camera-footer" :gutter="20" align="middle" justify="center" type="flex">
@@ -21,8 +21,12 @@ export default {
     }
   },
   mounted() {
+    let vm = this;
     this.imgSrc = this.$route.params.data;
-    console.log("data = "+this.imgSrc);
+    document.getElementById('pic-cancel').onclick=function(){
+          console.log('go back');
+          vm.$router.go(-1);
+    };
   }
 
 }
@@ -33,6 +37,7 @@ export default {
 #image-viewer {
   height: 75vh;
   width: 100vw;
+  object-fit: cover;
 }
 
 #camera-footer {
