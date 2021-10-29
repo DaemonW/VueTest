@@ -5,17 +5,17 @@
     </div>
     <canvas v-show="false" id="image-render"></canvas>
     <div>
-      <el-row id="camera-footer" :gutter="12" align="middle" justify="center" type="flex">
-        <el-col v-show="showFrame" :span="8">
+      <div id="camera-footer">
+        <div class="icon-wrapper" v-show="showFrame">
           <img id="thumbnail" :src="require('../assets/ic_placeholder.png')" class="footer-icon"/>
-        </el-col>
-        <el-col v-show="showFrame" :span="8">
+        </div>
+        <div class="icon-wrapper" v-show="showFrame">
           <img id="shutter" :src="require('../assets/ic_shutter.png')" class="footer-icon"/>
-        </el-col>
-        <el-col v-show="showFrame" :span="8">
+        </div>
+        <div class="icon-wrapper" v-show="showFrame">
           <img id="toggle" :src="require('../assets/ic_toggle.png')" class="footer-icon"/>
-        </el-col>
-      </el-row>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -149,8 +149,8 @@ export default {
       let ctx = canvas.getContext('2d');
       let as = this.getPixelRatio(ctx);
       console.log(`as = ${as}`);
-      canvas.width = this.videoWidth * as;
-      canvas.height = this.videoHeight * as;
+      canvas.width = this.videoWidth;
+      canvas.height = this.videoHeight;
       canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
       this.imageSrc = canvas.toDataURL('image/jpeg');
       this.showFrame = false;
@@ -197,9 +197,19 @@ export default {
   width: 36px;
 }
 
+.icon-wrapper{
+  width: 33.33%;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  align-items: center;
+}
+
 #camera-footer {
   height: 10vh;
   width: 100vw;
   background: #000000;
+  display: flex;
+  display: -webkit-flex;
 }
 </style>

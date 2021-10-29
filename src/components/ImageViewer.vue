@@ -4,11 +4,14 @@
       <img id="image-viewer" :src="imgSrc"/>
     </div>
     <div>
-      <el-row id="camera-footer" :gutter="20" align="middle" justify="center" type="flex">
-        <el-col :span="12"><img id="pic-cancel" class="footer-icon" :src="require('../assets/ic_cancel.png')"/></el-col>
-        <el-col :span="12"><img id="pic-confirm" class="footer-icon" :src="require('../assets/ic_confirm.png')"/>
-        </el-col>
-      </el-row>
+      <div id="camera-footer">
+        <div class="icon-wrapper">
+          <img id="pic-cancel" class="footer-icon" :src="require('../assets/ic_cancel.png')"/>
+        </div>
+        <div class="icon-wrapper">
+          <img id="pic-confirm" class="footer-icon" :src="require('../assets/ic_confirm.png')"/>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -44,6 +47,16 @@ export default {
   height: 10vh;
   width: 100vw;
   background: #000000;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.icon-wrapper{
+  width: 50%;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .footer-icon {
