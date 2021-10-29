@@ -1,10 +1,10 @@
 <template>
   <div id="root">
     <div>
-      <img id="image-viewer" :src="imgSrc"/>
+      <img id="image-viewer" :src="imgSrc" :style="{height:imgHeight+'px'}"/>
     </div>
     <div>
-      <div id="camera-footer">
+      <div id="camera-footer" :style="{height:footerHeight+'px'}">
         <div class="icon-wrapper">
           <img id="pic-cancel" class="footer-icon" :src="require('../assets/ic_cancel.png')"/>
         </div>
@@ -21,8 +21,14 @@ export default {
   name: 'ImageViewer',
   data() {
     return {
-      imgSrc: ''
+      imgSrc: '',
+      imgHeight:0,
+      footerHeight:0,
     }
+  },
+  created() {
+    this.imgHeight = document.body.clientHeight*0.88;
+    this.footerHeight = document.body.clientHeight - this.imgHeight;
   },
   mounted() {
     let vm = this;
@@ -38,13 +44,12 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #image-viewer {
-  height: 75vh;
   width: 100vw;
   object-fit: cover;
+  display: block;
 }
 
 #camera-footer {
-  height: 10vh;
   width: 100vw;
   background: #000000;
   display: -webkit-flex;

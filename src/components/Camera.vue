@@ -1,11 +1,11 @@
 <template>
   <div id="camera-panel">
     <div v-show="showFrame" id="camera-frame">
-      <video id="videoInput" class="canvas-big"></video>
+      <video id="videoInput" class="canvas-big" :style="{height:vh+'px'}"></video>
     </div>
     <canvas v-show="false" id="image-render"></canvas>
     <div>
-      <div id="camera-footer">
+      <div id="camera-footer" :style="{height:fh+'px'}">
         <div class="icon-wrapper" v-show="showFrame">
           <img id="thumbnail" :src="require('../assets/ic_placeholder.png')" class="footer-icon"/>
         </div>
@@ -50,12 +50,16 @@ export default {
           facingMode: {ideal: "environment"},
           focusMode: "continuous",
         }
-      }
+      },
+      vh:0,
+      fh:0,
     }
   },
   created() {
     this.ids = this.$root.$data.store.deviceId;
     this.index = this.$root.$data.store.deviceIndex;
+    this.vh=document.body.clientHeight*0.88;
+    this.fh=document.body.clientHeight-this.vh;
   },
   mounted() {
     let vm = this;
@@ -188,7 +192,6 @@ export default {
 #videoInput {
   object-fit: cover;
   display: block;
-  height: 75vh;
   width: 100vw;
 }
 
@@ -206,7 +209,6 @@ export default {
 }
 
 #camera-footer {
-  height: 10vh;
   width: 100vw;
   background: #000000;
   display: flex;
